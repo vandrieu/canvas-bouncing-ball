@@ -1,0 +1,15 @@
+html {
+  /* Disable pull-to-refresh and other built-in browser gestures */
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+#canvas1 {
+  position: absolute;
+  width: 100dvw;
+  height: 100dvh;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+}

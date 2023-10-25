@@ -1,41 +1,61 @@
-class Ball {
-  constructor(params = {}) {
-    this.x = params.x ?? mouse.x ?? canvas.width / 2;
-    this.y = params.y ?? mouse.y ?? canvas.height / 2;
+import { DrawableObject } from "./types"
+
+type BallInitParams = {
+  x?: number
+  y?: number
+  speedX?: number
+  speedY?: number
+}
+
+export default class Ball implements DrawableObject {
+
+  canvas: HTMLCanvasElement
+  x: number
+  y: number
+  size: number
+  speedX: number
+  speedY: number
+  lastTickMs: number
+
+  constructor(canvas: HTMLCanvasElement, params: BallInitParams = {}) {
+    this.canvas = canvas;
+    this.x = params.x ?? canvas.width / 2;
+    this.y = params.y ?? canvas.height / 2;
     this.size = 20;
     this.speedX = params.speedX ?? 2
     this.speedY = params.speedY ?? -20
     this.lastTickMs = Date.now()
   }
+
   update() {
 
     const g = 1.5
     const tickMs = Date.now()
     const elapsed = tickMs - this.lastTickMs
-    // console.log("elapsed", elapsed)
     this.lastTickMs = Date.now()
 
     // Apply acceleration
     this.speedY += g * elapsed / 20;
-    // this.speedY += g;
+    // Apply speed
     this.x += this.speedX * elapsed / 20;
     this.y += this.speedY * elapsed / 20;
-    let horizontalCollision = false;
-    let verticalCollision = false;
+
     // Handle ground collision
-    if (this.y + this.size >= canvas.height) {
-      this.y = canvas.height - this.size;
+    if (this.y + this.size >= this.canvas.height) {
+      this.y = this.canvas.height - this.size;
       this.speedX *= 0.97;
       this.speedY *= -0.8;
     }
+
     // Handle left wall collision
     if (this.x < this.size) {
       this.x = this.size
       this.speedX *= -0.8;
     }
+
     // Handle right wall collision
-    if (this.x + this.size > canvas.width) {
-      this.x = canvas.width - this.size
+    if (this.x + this.size > this.canvas.width) {
+      this.x = this.canvas.width - this.size
       this.speedX *= -0.8;
     }
     // Stop ball when speed is too low
@@ -43,7 +63,11 @@ class Ball {
       this.speedX = 0;
     }
   }
+
   draw() {
+
+    const ctx = this.canvas.getContext('2d');
+    if (!ctx) throw new Error("Canvas context not found")
 
     // Background color
     ctx.fillStyle = '#007FFF';
@@ -70,4 +94,5 @@ class Ball {
     ctx.fill()
 
   }
+
 }

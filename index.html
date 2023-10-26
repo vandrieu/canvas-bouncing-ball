@@ -9,7 +9,23 @@
 </head>
 
 <body>
+  <h3>Ball physics simulation</h3>
+  <div>• Gravity</div>
+  <div>• Collisions</div>
+  <div>• Multi-touch (on mobile)</div>
+  <div>• Different size & weight balls (on desktop)</div>
+
+  <div id="onboarding" style="position: absolute; top:0;left:0;right:0;bottom:0;display: flex; align-items: center; justify-content: center; flex-direction: column;">
+    <img src="./hand_drag.jpg" style="transform:rotate(-25deg)">
+    <div style="z-index: 10">Drag your finger to throw a ball</div>
+  </div>
+
   <canvas id="canvas1"></canvas>
+
+  <div id="removeBallsContainer" style="position: absolute; top:0;right:0;padding:20px 10px;display:none">
+    <button id="removeBallsBtn" class="stripeBtn">Clear</button>
+  </div>
+
   <script type="module" src="/src/index.ts"></script>
 </body>
 

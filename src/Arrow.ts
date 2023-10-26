@@ -1,39 +1,35 @@
+import Victor from "victor"
 import { DrawableObject, MouseState } from "./types"
 
 export default class Arrow implements DrawableObject {
 
   canvas: HTMLCanvasElement
   mouseState: MouseState
-  fromX: number
-  fromY: number
-  toX: number
-  toY: number
+  from: Victor
+  to: Victor
   touchId: number
 
-  constructor(canvas: HTMLCanvasElement, mouseState: MouseState, fromX: number, fromY: number, touchId: number) {
+  constructor(canvas: HTMLCanvasElement, mouseState: MouseState, from: Victor, touchId: number) {
     this.canvas = canvas
     this.mouseState = mouseState
-    this.fromX = fromX
-    this.fromY = fromY
-    this.toX = fromX
-    this.toY = fromY
+    this.from = from
+    this.to = from.clone()
     this.touchId = touchId
   }
 
   update() {
-    this.toX = this.mouseState.pos[this.touchId].x
-    this.toY = this.mouseState.pos[this.touchId].y
+    this.to = this.mouseState.pos[this.touchId]
   }
 
   draw() {
-    this.drawArrow(this.fromX, this.fromY, this.toX, this.toY)
+    this.drawArrow(this.from, this.to)
   }
 
-  drawArrow(fromx: number, fromy: number, tox: number, toy: number) {
-    const arrowLength = Math.sqrt((fromx - tox) ** 2 + (fromy - toy) ** 2);
+  drawArrow(from: Victor, to: Victor) {
+    const arrowLength = from.distance(to)
     const bodySize = Math.min(50, arrowLength / 10)
     const headSize = bodySize * 2;
-    const angle = Math.atan2(toy - fromy, tox - fromx);
+    const angle = Math.atan2(to.y - from.y, to.x - from.x);
 
     const ctx = this.canvas.getContext('2d');
     if (!ctx) throw new Error("Canvas context not found")
@@ -44,18 +40,18 @@ export default class Arrow implements DrawableObject {
 
     // Arrow body
     ctx.beginPath();
-    ctx.moveTo(fromx, fromy);
-    ctx.lineTo(tox, toy);
+    ctx.moveTo(from.x, from.y);
+    ctx.lineTo(to.x, to.y);
     ctx.lineWidth = bodySize;
     ctx.stroke();
 
     // Arrow head
     ctx.beginPath();
-    ctx.moveTo(tox, toy);
-    ctx.lineTo(tox - headSize * Math.cos(angle - Math.PI / 7), toy - headSize * Math.sin(angle - Math.PI / 7));
-    ctx.lineTo(tox - headSize * Math.cos(angle + Math.PI / 7), toy - headSize * Math.sin(angle + Math.PI / 7));
-    ctx.lineTo(tox, toy);
-    ctx.lineTo(tox - headSize * Math.cos(angle - Math.PI / 7), toy - headSize * Math.sin(angle - Math.PI / 7));
+    ctx.moveTo(to.x, to.y);
+    ctx.lineTo(to.x - headSize * Math.cos(angle - Math.PI / 7), to.y - headSize * Math.sin(angle - Math.PI / 7));
+    ctx.lineTo(to.x - headSize * Math.cos(angle + Math.PI / 7), to.y - headSize * Math.sin(angle + Math.PI / 7));
+    ctx.lineTo(to.x, to.y);
+    ctx.lineTo(to.x - headSize * Math.cos(angle - Math.PI / 7), to.y - headSize * Math.sin(angle - Math.PI / 7));
     ctx.lineWidth = bodySize;
     ctx.stroke();
     ctx.fill();

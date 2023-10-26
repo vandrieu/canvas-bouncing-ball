@@ -1,5 +1,4 @@
-// import Ball from './'
-
+import Victor from "victor";
 import Arrow from "./Arrow";
 import Ball from "./Ball";
 import { setupMouseListeners } from "./mouseListeners";
@@ -19,27 +18,34 @@ canvas.height = window.innerHeight;
 
 setupMouseListeners(mouseState, canvas, onUp, onDown, onMove)
 
-function onMove(touchId: number, x: number, y: number) { }
+function onMove(touchId: number, position: Victor) { }
 
-function onDown(touchId: number, x: number, y: number) {
-  arrowsArray.push(new Arrow(canvas, mouseState, mouseState.down[touchId].x, mouseState.down[touchId].y, touchId))
+function onDown(touchId: number, downPosition: Victor) {
+  arrowsArray.push(new Arrow(canvas, mouseState, mouseState.down[touchId], touchId))
 }
 
-function onUp(touchId: number, x: number, y: number) {
+function onUp(touchId: number, upPosition: Victor) {
+  const downPosition = mouseState.down[touchId]
   // Remove the arrow
   arrowsArray = arrowsArray.filter(arrow => arrow.touchId !== touchId)
   // Add a new ball
   ballsArray.push(new Ball(
     canvas,
+    ballsArray,
     {
-      x: mouseState.down[touchId].x,
-      y: mouseState.down[touchId].y,
-      speedX: (x - mouseState.down[touchId].x) / 5,
-      speedY: (y - mouseState.down[touchId].y) / 5,
+      pos: upPosition,
+      speed: upPosition.clone().subtract(downPosition).clone().divideScalar(5),
     }
   ));
+  // Remove the oldest ball if there are too many
+  if (ballsArray.length > Ball.MAX_BALLS) {
+    ballsArray.shift()
+  }
 }
 
+document.querySelector('#removeBallsBtn')?.addEventListener('click', () => {
+  ballsArray = []
+})
 
 function animate() {
   ctx.fillStyle = 'white';
@@ -52,8 +58,31 @@ animate();
 function drawObjects(arrays: DrawableObject[][]) {
   for (const array of arrays) {
     for (let i = 0; i < array.length; i++) {
-      array[i].update();
-      array[i].draw();
+      const drawableObject = array[i]
+      drawableObject.update();
+      if (drawableObject.postUpdate !== undefined) {
+        drawableObject.postUpdate()
+      }
+      drawableObject.draw();
     }
   }
 }
+
+
+// ballsArray.push(new Ball(
+//   canvas,
+//   ballsArray,
+//   {
+//     pos: new Victor(0, 300),
+//     speed: new Victor(5, -5),
+//   }
+// ));
+
+// ballsArray.push(new Ball(
+//   canvas,
+//   ballsArray,
+//   {
+//     pos: new Victor(canvas.width, 390),
+//     speed: new Victor(-5, 0),
+//   }
+// ));

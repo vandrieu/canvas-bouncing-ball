@@ -33,7 +33,7 @@ function onUp(touchId: number, upPosition: Victor) {
     canvas,
     ballsArray,
     {
-      pos: upPosition,
+      pos: downPosition,
       speed: upPosition.clone().subtract(downPosition).clone().divideScalar(5),
     }
   ));

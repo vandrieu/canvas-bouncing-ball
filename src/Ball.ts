@@ -52,7 +52,9 @@ export default class Ball implements DrawableObject {
 
     // Handle ground collision
     if (this.pos.y + this.radius >= this.canvas.height) {
-      this.pos.y = this.canvas.height - this.radius;
+      let outOfFrame = this.pos.y + this.radius - this.canvas.height
+      if (outOfFrame <= 4) outOfFrame = 0
+      this.pos.y = this.canvas.height - this.radius - outOfFrame;
       this.speed.x *= Ball.FRICTION_ENERGY_LOSS;
       this.speed.y *= -1;
       this.speed.y *= Ball.WALL_COLLISION_ENERGY_LOSS;
@@ -60,14 +62,18 @@ export default class Ball implements DrawableObject {
 
     // Handle left wall collision
     if (this.pos.x < this.radius) {
-      this.pos.x = this.radius
+      let outOfFrame = this.radius - this.pos.x
+      if (outOfFrame <= 4) outOfFrame = 0
+      this.pos.x = this.radius + outOfFrame;
       this.speed.x *= -1;
       this.speed.x *= Ball.WALL_COLLISION_ENERGY_LOSS;
     }
 
     // Handle right wall collision
     if (this.pos.x + this.radius > this.canvas.width) {
-      this.pos.x = this.canvas.width - this.radius
+      let outOfFrame = this.pos.x + this.radius - this.canvas.width
+      if (outOfFrame <= 4) outOfFrame = 0
+      this.pos.x = this.canvas.width - this.radius - outOfFrame;
       this.speed.x *= -1;
       this.speed.x *= Ball.WALL_COLLISION_ENERGY_LOSS;
     }

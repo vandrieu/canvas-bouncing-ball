@@ -67,22 +67,3 @@ function drawObjects(arrays: DrawableObject[][]) {
     }
   }
 }
-
-
-// ballsArray.push(new Ball(
-//   canvas,
-//   ballsArray,
-//   {
-//     pos: new Victor(0, 300),
-//     speed: new Victor(5, -5),
-//   }
-// ));
-
-// ballsArray.push(new Ball(
-//   canvas,
-//   ballsArray,
-//   {
-//     pos: new Victor(canvas.width, 390),
-//     speed: new Victor(-5, 0),
-//   }
-// ));

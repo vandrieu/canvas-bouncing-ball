@@ -92,7 +92,7 @@ export default class Ball implements DrawableObject {
         this.speed = speed1
         ball.speed = speed2
 
-        // 2. Collisions absobs some energy
+        // 2. Collisions absorbs some energy
         this.speed.multiplyScalar(Ball.BALL_COLLISION_ENERGY_LOSS)
         ball.speed.multiplyScalar(Ball.BALL_COLLISION_ENERGY_LOSS)
 

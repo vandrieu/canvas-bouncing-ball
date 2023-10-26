@@ -102,10 +102,15 @@ export default class Ball implements DrawableObject {
         this.speed.multiplyScalar(Ball.BALL_COLLISION_ENERGY_LOSS)
         ball.speed.multiplyScalar(Ball.BALL_COLLISION_ENERGY_LOSS)
 
-        // 3. Update balls position to avoid overlap
+        // 3. Update balls position to avoid overlap. Move the lightest ball
         const overlap = this.radius + ball.radius - distance
-        this.pos.x -= ((overlap) * Math.cos(angle))
-        this.pos.y -= ((overlap) * Math.sin(angle))
+        if (this.mass < ball.mass) {
+          this.pos.x -= ((overlap) * Math.cos(angle))
+          this.pos.y -= ((overlap) * Math.sin(angle))
+        } else {
+          ball.pos.x += ((overlap) * Math.cos(angle))
+          ball.pos.y += ((overlap) * Math.sin(angle))
+        }
 
         // 4. Stop ball when speed is too low
         if (Math.abs(this.speed.x) < 0.2) {

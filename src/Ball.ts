@@ -31,7 +31,7 @@ export default class Ball implements DrawableObject {
     this.acceleration = Ball.ACCELERATION
     this.speed = params.speed ?? new Victor(2, -20)
     this.pos = params.pos ?? new Victor(canvas.width / 2, canvas.height / 2)
-    this.radius = randomInt(30, canvas.width / (Ball.MAX_BALLS * 4 / 3) / 2)
+    this.radius = randomInt(30, canvas.width / (Math.min(Ball.MAX_BALLS, 20) * 4 / 3) / 2)
     this.lastTickMs = Date.now()
     this.mass = this.radius * this.radius * this.radius
     document.querySelector('#onboarding')?.remove();
